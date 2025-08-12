@@ -2,6 +2,7 @@ local Health = require("core.health")
 local Pistol = require("entities.weapons.pistol")
 local Shotgun = require("entities.weapons.shotgun")
 local PlayerExperience = require("entities.playerExperience")
+local Animation = require("core.animation")
 
 Player = {}
 Player.__index = Player
@@ -9,11 +10,20 @@ Player.__index = Player
 function Player:new(x, y)
     self.x = x
     self.y = y
-    self.width = 10
-    self.height = 10
+    self.width = 32
+    self.height = 64
+    self.flip = false
     self.speed = 100
     self.radius = 12
     self.health = Health:new(100)
+
+    self.animation = Animation:new( --animaçao  walking
+        "assets/dummy_player.png", -- caminho da imagem
+        32,                  -- largura do frame
+        46,                  -- altura do frame (exemplo)
+        4,                   -- número de frames
+        0.1                  -- tempo por frame
+    )
 
     self.aimX = x
     self.aimY = y
@@ -35,10 +45,10 @@ end
 
 function Player:update(dt)
     local moveX, moveY = 0, 0
-    if Love.keyboard.isDown("w") or Love.keyboard.isDown("up") then moveY = -1 end
-    if Love.keyboard.isDown("s") or Love.keyboard.isDown("down") then moveY = 1 end
-    if Love.keyboard.isDown("a") or Love.keyboard.isDown("left") then moveX = -1 end
-    if Love.keyboard.isDown("d") or Love.keyboard.isDown("right") then moveX = 1 end
+    if love.keyboard.isDown("w") or Love.keyboard.isDown("up") then moveY = -1 self.animation:update(dt) end
+    if love.keyboard.isDown("s") or Love.keyboard.isDown("down") then moveY = 1 self.animation:update(dt) end
+    if love.keyboard.isDown("a") or Love.keyboard.isDown("left") then moveX = -1 self.animation:update(dt) end
+    if love.keyboard.isDown("d") or Love.keyboard.isDown("right") then moveX = 1 self.animation:update(dt) end
 
     local len = math.sqrt(moveX^2 + moveY^2)
     if len > 0 then
@@ -46,7 +56,7 @@ function Player:update(dt)
         self.y = self.y + (moveY / len) * self.speed * dt
     end
 
-    local mx, my = Love.mouse.getPosition()
+    local mx, my = love.mouse.getPosition()
     local dx = mx - self.x
     local dy = my - self.y
     local angle = math.atan2(dy, dx)
@@ -54,17 +64,26 @@ function Player:update(dt)
     self.aimX = self.x + self.width/2 + math.cos(angle)
     self.aimY = self.y + self.height/2 + math.sin(angle)
 
+    if dx >= 0 then
+        self.flip = false
+    else
+        self.flip = true
+    end
+
+    print("Player flip?", self.flip)
+    print("mouse angle:", angle)
+   
+
     self.aimAngle = angle
 
     self.weapon:update(dt)
 end
 
 function Player:draw()
-    Love.graphics.setColor(1, 1, 1)
-    Love.graphics.rectangle("fill", self.x, self.y, self.width, self.height)
+    self.animation:draw(self, true, self.flip)
 
-    self.health:draw(self.x + self.width / 2 - 20, self.y + self.height / 2 - 25, 40)
-    self.weapon:draw(self.x + self.width / 2 - 20, self.y + self.height / 2 - 20, 40)
+    self.health:draw(self.x + self.width / 2 - 20, self.y + self.height / 2 + 45, 40)
+    self.weapon:draw(self.x + self.width / 2 - 20, self.y + self.height / 2 + 40, 40)
 end
 
 function Player:takeDamage(amount)
