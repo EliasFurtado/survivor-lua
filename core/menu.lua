@@ -16,7 +16,7 @@ local botoes_menu = {
     Menu:novoBotao("Iniciar Jogo", function()
         TELA_ATUAL = "game"
         PAUSADO = false
-        somInicio:play()
+        SomInicio:play()
         Game:load()
     end),
     Menu:novoBotao("Sair", Love.event.quit)
@@ -36,12 +36,12 @@ local botoes_pausa = {
 function Menu:load()
     font = Love.graphics.newFont(32)
 
-    somInicio = love.audio.newSource("utils/audio/game-start.ogg", "static")
+    SomInicio = Love.audio.newSource("utils/audio/game-start.ogg", "static")
 end
 
 function Menu:draw()
-    somDeath:stop()
-    somMusic:stop()
+    SomDeath:stop()
+    SomMusic:stop()
 
     local botoes = botoes_menu
 

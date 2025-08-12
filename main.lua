@@ -2,8 +2,8 @@ Love = require("love")
 Game = require("core.game")
 Menu = require("core.menu")
 
-WINDOW_WIDTH = love.graphics.getWidth() or 800
-WINDOW_HEIGHT = love.graphics.getHeight() or 600
+WINDOW_WIDTH  = Love.graphics.getWidth() or 800
+WINDOW_HEIGHT = Love.graphics.getHeight() or 600
 
 TELA_ATUAL = "menu"
 

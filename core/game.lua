@@ -17,8 +17,8 @@ function Game:load()
     self.lootTable = {}
     self.timeSinceLastEnemySpawn = 0
 
-    somMusic = love.audio.newSource("utils/audio/game-music.ogg", "static")
-    somDeath = love.audio.newSource("utils/audio/game-death.ogg", "static")
+    SomMusic = Love.audio.newSource("utils/audio/game-music.ogg", "static")
+    SomDeath = Love.audio.newSource("utils/audio/game-death.ogg", "static")
 end
 
 function Game:spawnEnemies(n)
@@ -37,11 +37,11 @@ end
 
 function Game:update(dt)
     self.player:update(dt)
-    somMusic:play()
+    SomMusic:play()
     if self.player:isDead() then
         SLOW_RATE = 0.5
-        if not somDeath:isPlaying() and not somTerminou then
-            somTerminou = true
+        if not SomDeath:isPlaying() and not SomTerminou then
+            SomTerminou = true
             TELA_ATUAL = "menu"
             PAUSADO = false
             SLOW_RATE = 0
