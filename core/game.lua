@@ -3,6 +3,8 @@ local Enemy = require("entities.enemy")
 local Collision = require("core.collision")
 local HudExperience = require("hud.hudExperience")
 
+local somTerminou = false
+
 local Game = {}
 Game.__index = Game
 
@@ -14,29 +16,40 @@ function Game:load()
     self.bullets = {}
     self.lootTable = {}
     self.timeSinceLastEnemySpawn = 0
-    self.debugMode = false
+    self.debugMode = true
+
+    SomMusic = Love.audio.newSource("utils/audio/game-music.ogg", "static")
+    SomDeath = Love.audio.newSource("utils/audio/game-death.ogg", "static")
 end
 
 function Game:spawnEnemies(n)
-    if self.debugMode then
-        local radius = 200
+    if not self.debugMode then
+        local radius = 600
         for i = 1, n do
             local angle = math.random() * 2 * math.pi
             local x = self.player.x + math.cos(angle) * radius
             local y = self.player.y + math.sin(angle) * radius
 
-            local enemy = Enemy:new(x, y)
-            enemy:setTarget(self.player)
-            table.insert(self.enemies, enemy)
-            self.timeSinceLastEnemySpawn = 0
+                local enemy = Enemy:new(x, y)
+                enemy:setTarget(self.player)
+                table.insert(self.enemies, enemy)
+                self.timeSinceLastEnemySpawn = 0
         end
     end
 end
 
 function Game:update(dt)
     self.player:update(dt)
+    SomMusic:play()
     if self.player:isDead() then
-        love.event.quit()
+        SLOW_RATE = 0.5
+        if not SomDeath:isPlaying() and not SomTerminou then
+            SomTerminou = true
+            TELA_ATUAL = "menu"
+            PAUSADO = false
+            SLOW_RATE = 0
+            SLOW_FACTOR = 1
+        end
     end
 
     for i = #self.enemies, 1, -1 do
@@ -120,10 +133,6 @@ end
 
 
 function Game:keypressed(key)
-    if key == "escape" then
-        love.event.quit()
-    end
-
     if key == "q" then
         self.player:switchWeapon()
     end
