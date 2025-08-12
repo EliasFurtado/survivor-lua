@@ -3,8 +3,6 @@ local Enemy = require("entities.enemy")
 local Collision = require("core.collision")
 local HudExperience = require("hud.hudExperience")
 
-local somTerminou = false
-
 local Game = {}
 Game.__index = Game
 
@@ -16,14 +14,13 @@ function Game:load()
     self.bullets = {}
     self.lootTable = {}
     self.timeSinceLastEnemySpawn = 0
-    self.debugMode = true
 
     SomMusic = Love.audio.newSource("utils/audio/game-music.ogg", "static")
     SomDeath = Love.audio.newSource("utils/audio/game-death.ogg", "static")
 end
 
 function Game:spawnEnemies(n)
-    if not self.debugMode then
+    if not DESATIVA_INIMIGOS then
         local radius = 600
         for i = 1, n do
             local angle = math.random() * 2 * math.pi
@@ -52,15 +49,17 @@ function Game:update(dt)
         end
     end
 
-    for i = #self.enemies, 1, -1 do
-        local enemy = self.enemies[i]
-        enemy:update(dt)
-        if Collision.checkAABB(self.player, enemy) then
-            self.player:takeDamage(1)
-        end
-        if enemy:isDead() then
-            enemy:dropExperience(self.lootTable)
-            table.remove(self.enemies, i)
+    if not DESATIVA_INIMIGOS then
+        for i = #self.enemies, 1, -1 do
+            local enemy = self.enemies[i]
+            enemy:update(dt)
+            if Collision.checkAABB(self.player, enemy) then
+                self.player:takeDamage(1)
+            end
+            if enemy:isDead() then
+                enemy:dropExperience(self.lootTable)
+                table.remove(self.enemies, i)
+            end
         end
     end
 
@@ -133,12 +132,16 @@ end
 
 
 function Game:keypressed(key)
+    if self.player:isDead() then return end
+
     if key == "q" then
         self.player:switchWeapon()
     end
 end
 
 function Game:mousepressed(x, y, button)
+    if self.player:isDead() then return end
+
     if button == 1 then
         self.player:shootTowards(self.bullets)
     end

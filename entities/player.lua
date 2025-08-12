@@ -70,8 +70,8 @@ function Player:update(dt)
         self.flip = true
     end
 
-    print("Player flip?", self.flip)
-    print("mouse angle:", angle)
+   -- print("Player flip?", self.flip)
+   -- print("mouse angle:", angle)
    
 
     self.aimAngle = angle
@@ -88,6 +88,11 @@ end
 
 function Player:takeDamage(amount)
     self.health:take(amount)
+
+    if self.health:isDead() then
+        SomMusic:stop()
+        SomDeath:play()
+    end
 end
 
 function Player:heal(amount)
