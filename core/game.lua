@@ -17,7 +17,7 @@ function Game:load()
 end
 
 function Game:spawnEnemies(n)
-    local radius = 200
+    local radius = 600
     for i = 1, n do
         local angle = math.random() * 2 * math.pi
         local x = self.player.x + math.cos(angle) * radius
