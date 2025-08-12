@@ -11,6 +11,11 @@ end
 
 function Health:take(amount)
     self.current = math.max(0, self.current - amount)
+
+    if(self.current <= 0) then
+        somMusic:stop()
+        somDeath:play()
+    end
 end
 
 function Health:heal(amount)

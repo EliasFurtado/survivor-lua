@@ -3,6 +3,8 @@ local Enemy = require("entities.enemy")
 local Collision = require("core.collision")
 local HudExperience = require("hud.hudExperience")
 
+local somTerminou = false
+
 local Game = {}
 Game.__index = Game
 
@@ -14,6 +16,9 @@ function Game:load()
     self.bullets = {}
     self.lootTable = {}
     self.timeSinceLastEnemySpawn = 0
+
+    somMusic = love.audio.newSource("utils/audio/game-music.ogg", "static")
+    somDeath = love.audio.newSource("utils/audio/game-death.ogg", "static")
 end
 
 function Game:spawnEnemies(n)
@@ -32,8 +37,16 @@ end
 
 function Game:update(dt)
     self.player:update(dt)
+    somMusic:play()
     if self.player:isDead() then
-        Love.event.quit()
+        SLOW_RATE = 0.5
+        if not somDeath:isPlaying() and not somTerminou then
+            somTerminou = true
+            TELA_ATUAL = "menu"
+            PAUSADO = false
+            SLOW_RATE = 0
+            SLOW_FACTOR = 1
+        end
     end
 
     for i = #self.enemies, 1, -1 do
@@ -117,10 +130,6 @@ end
 
 
 function Game:keypressed(key)
-    if key == "escape" then
-        Love.event.quit()
-    end
-
     if key == "q" then
         self.player:switchWeapon()
     end

@@ -9,14 +9,25 @@ TELA_ATUAL = "menu"
 
 PAUSADO = false
 
+SLOW_FACTOR = 1  -- começa normal
+SLOW_RATE = 0
+
 function Love.load()
     Game:load()
     Menu:load()
 end
 
 function Love.update(dt)
+
+    if SLOW_RATE > 0 then
+        SLOW_FACTOR = SLOW_FACTOR - SLOW_RATE * dt
+        if SLOW_FACTOR < 0 then
+            SLOW_FACTOR = 0
+        end
+    end
+
     if TELA_ATUAL == "game" and not PAUSADO  then
-        Game:update(dt)
+        Game:update(SLOW_FACTOR * dt)
     end
 end
 
@@ -32,7 +43,7 @@ function Love.draw()
 end
 
 function Love.keypressed(key)
-    if key == "escape" then
+    if key == "escape" and TELA_ATUAL ~= "menu" and not Player:isDead() then
         PAUSADO = not PAUSADO -- alterna entre PAUSADO e rodando
     end
 
