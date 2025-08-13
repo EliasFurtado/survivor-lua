@@ -6,7 +6,7 @@ function Dash:new()
         distance = 100,
         duration = 0.2,
         timeSinceLastDash = 0,
-        cooldown = 0,
+        cooldown = 3,
         dashing = false,
         dashTimer = 0,
         dashDirection = { x = 0, y = 0 }
