@@ -28,7 +28,7 @@ end
 
 function Game:spawnEnemies(n)
     if not DESATIVA_INIMIGOS or not HAS_BOSS then
-        local radius = 200
+        local radius = 400
         for i = 1, n do
             local angle = math.random() * 2 * math.pi
             local x = self.player.x + math.cos(angle) * radius
@@ -189,6 +189,10 @@ function Game:keypressed(key)
 
     if key == "q" then
         self.player:switchWeapon()
+    end
+
+    if key == "space" then
+        self.player:startDash()
     end
 end
 

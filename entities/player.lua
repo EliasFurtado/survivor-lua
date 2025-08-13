@@ -3,6 +3,7 @@ local Pistol = require("entities.weapons.pistol")
 local Shotgun = require("entities.weapons.shotgun")
 local PlayerExperience = require("entities.playerExperience")
 local Animation = require("core.animation")
+local Dash = require("core.dash")
 
 Player = {}
 Player.__index = Player
@@ -35,6 +36,8 @@ function Player:new(x, y)
     }
     self.currentWeaponIndex = 1
     self.weapon = self.weapons[self.currentWeaponIndex]
+
+    self.dash = Dash:new()
 
     self.experience = PlayerExperience:new(function()
         self:improveWeapon()
@@ -77,6 +80,7 @@ function Player:update(dt)
     self.aimAngle = angle
 
     self.weapon:update(dt)
+    self.dash:update(dt, self)
 end
 
 function Player:draw()
@@ -122,6 +126,10 @@ function Player:improveWeapon()
     for wi = 1, #self.weapons do
         self.weapons[wi].damage = self.weapons[wi].damage + 50 * self.experience:getLevel()
     end
+end
+
+function Player:startDash()
+    self.dash:startDash(self)
 end
 
 return Player
