@@ -21,13 +21,15 @@ function Health:isDead()
     return self.current <= 0
 end
 
-function Health:draw(x, y, width)
+function Health:draw(x, y, width, height)
     width = width or 40
+    height = height or 5
+
     local percent = self.current / self.max
     Love.graphics.setColor(1, 0, 0)
-    Love.graphics.rectangle("fill", x, y, width, 5)
+    Love.graphics.rectangle("fill", x, y, width, height)
     Love.graphics.setColor(0, 1, 0)
-    Love.graphics.rectangle("fill", x, y, width * percent, 5)
+    Love.graphics.rectangle("fill", x, y, width * percent, height)
     Love.graphics.setColor(1, 1, 1)
 end
 
