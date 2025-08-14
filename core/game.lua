@@ -2,10 +2,6 @@ local Player = require("entities.player")
 local Enemy = require("entities.enemy")
 local Collision = require("core.collision")
 local HudExperience = require("hud.hudExperience")
-local Boss = require("entities.boss")
-
-
-HAS_BOSS = false
 
 local Game = {}
 Game.__index = Game
@@ -14,20 +10,14 @@ function Game:load()
     self.player = Player:new(love.graphics.getWidth() / 2, love.graphics.getHeight() / 2)
     self.hudExperience = HudExperience
     self.enemies = {}
-    self.boss = {}
     self:spawnEnemies(20)
     self.bullets = {}
     self.lootTable = {}
     self.timeSinceLastEnemySpawn = 0
-    self.timeForBoss = 0
-
-    SomMusic = Love.audio.newSource("utils/audio/game-music.ogg", "static")
-    SomDeath = Love.audio.newSource("utils/audio/game-death.ogg", "static")
-    SomMusicBoss = Love.audio.newSource("utils/audio/boss-music.ogg", "static")
 end
 
 function Game:spawnEnemies(n)
-    if not DESATIVA_INIMIGOS or not HAS_BOSS then
+    if not DESATIVA_INIMIGOS then
         local radius = 400
         for i = 1, n do
             local angle = math.random() * 2 * math.pi
@@ -44,37 +34,12 @@ end
 
 function Game:update(dt)
     self.player:update(dt)
-    SomMusic:play()
-    if self.player:isDead() then
-        SLOW_RATE = 0.5
-        if not SomDeath:isPlaying() and not SomTerminou then
-            SomTerminou = true
-            TELA_ATUAL = "menu"
-            PAUSADO = false
-            SLOW_RATE = 0
-            SLOW_FACTOR = 1
-        end
-    end
-
-    self.timeForBoss = self.timeForBoss + dt
-
-    if self.timeForBoss >= 3 and HAS_BOSS then
-        SomMusic:stop()
-        SomMusicBoss:play()
-    end
     
     if not DESATIVA_INIMIGOS then
         for i = #self.enemies, 1, -1 do
             local enemy = self.enemies[i]
-            local run = false
-            if HAS_BOSS then
-                run = true
-                if self.timeForBoss >= 2 then
-                    enemy:update(dt, run)
-                end
-            else
-                enemy:update(dt, run)
-            end
+            enemy:update(dt)
+    
             if Collision.checkAABB(self.player, enemy) then
                 self.player:takeDamage(1)
             end
@@ -123,34 +88,15 @@ function Game:update(dt)
             table.remove(self.lootTable, li)
         end
     end
-
-    if self.timeForBoss >= 10 and not HAS_BOSS then
-        self.timeForBoss = 0
-        -- Spawn a boss enemy
-        HAS_BOSS = true
-        local boss = Boss:new(WINDOW_WIDTH * 0.5, 60)
-        boss:setTarget(self.player)
-        table.insert(self.boss, boss)
-    end
     
-    if self.timeSinceLastEnemySpawn >= 5 and not HAS_BOSS then
+    if self.timeSinceLastEnemySpawn >= 5 then
         self:spawnEnemies(10)
         self.timeSinceLastEnemySpawn = 0
     end
-        
-    for i = #self.boss, 1, -1 do
-            local boss = self.boss[i]
-            boss:update(dt)
 
-            if Collision.checkAABB(self.player, boss) then
-                self.player:takeDamage(5000)
-            end
-            if boss:isDead() then
-                boss:dropExperience(self.lootTable)
-                table.remove(self.enemies, i)
-            end
+    if Player:isDead() then
+        Love.event.quit()
     end
-
 end
 
 function Game:draw()
@@ -169,15 +115,6 @@ function Game:draw()
     for bi = #self.bullets, 1, -1 do
         local bullet = self.bullets[bi]
         bullet:draw()
-    end
-
-    for ei = #self.boss, 1, -1 do
-        local boss = self.boss[ei]
-        if boss.timeToSpawn <= boss.spawnTime then
-            boss.timeToSpawn = boss.timeToSpawn + 1
-        else
-            boss:draw()
-        end
     end
 
 end

@@ -20,21 +20,10 @@ function Enemy:new(x, y)
     return obj
 end
 
-function Enemy:update(dt, run)
-    -- If we have a target (the player), move towards it
-    local run = run or false
-    local speedBoost = 1
-
+function Enemy:update(dt)
     if self.target then
         local dx = self.target.x - self.x
         local dy = self.target.y - self.y
-
-        -- Se run for true, inverte a direção (fugir do player)
-        if run then
-            dx = -dx
-            dy = -dy
-            speedBoost = 10
-        end
 
         local distance = math.sqrt(dx * dx + dy * dy)
         
@@ -45,8 +34,8 @@ function Enemy:update(dt, run)
         end
         
         -- Move towards the target
-        self.x = self.x + dx * (self.speed * speedBoost) * dt
-        self.y = self.y + dy * (self.speed * speedBoost) * dt
+        self.x = self.x + dx * (self.speed ) * dt
+        self.y = self.y + dy * (self.speed ) * dt
     end
 end
 
@@ -58,11 +47,7 @@ function Enemy:draw()
     Love.graphics.setColor(1, 0, 0)  -- Red color for enemy
     Love.graphics.rectangle("fill", self.x, self.y, self.width, self.height)
     Love.graphics.setColor(1, 1, 1)  -- Reset color
-    if HAS_BOSS then
-        Love.graphics.print("!", (self.x + self.width / 2) - 2, self.y + self.height / 2 - 25)
-    else  
-        self.health:draw(self.x + self.width / 2 - 20, self.y + self.height / 2 - 25, 40)
-    end
+    self.health:draw(self.x + self.width / 2 - 20, self.y + self.height / 2 - 25, 40)
 end
 
 function Enemy:takeDamage(amount)

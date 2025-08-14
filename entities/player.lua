@@ -92,12 +92,6 @@ end
 
 function Player:takeDamage(amount)
     self.health:take(amount)
-
-    if self.health:isDead() then
-        SomMusic:stop()
-        SomMusicBoss:stop()
-        SomDeath:play()
-    end
 end
 
 function Player:heal(amount)
