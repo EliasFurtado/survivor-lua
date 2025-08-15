@@ -18,3 +18,36 @@ Um jogo top-down 2D feito em **Lua** usando o framework **LÖVE2D**, com geraç�
 
 ## Estrutura de Pastas
 
+/assets
+tileset.png # Tiles para o mapa
+/entities
+player.lua
+enemy.lua
+/core
+mapa.lua # Mapa por tiles aleatório
+mapaAutonomoCelulares.lua # Mapa gerado por autômatos celulares
+camera.lua
+collision.lua
+/hud
+hudExperience.lua
+main.lua
+core/game.lua
+
+Rode com LÖVE:
+ Tecla de task configurada para VCCode crtl+shift+b
+
+Uso
+Teclas de movimento: W, A, S, D
+
+Dash: SPACE
+
+Trocar arma: Q
+
+Atirar: clique do mouse
+
+Personalização do Mapa
+Modifique o fillProb no MapaAC:new(width, height, fillProb, tileSize) para ajustar a densidade de TERRA/GRAMA.
+
+Modifique os tiles no tileset.png para alterar a aparência do mapa.
+
+Use mais ou menos passos de step() para suavizar o mapa.
