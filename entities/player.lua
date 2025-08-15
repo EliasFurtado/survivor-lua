@@ -73,10 +73,6 @@ function Player:update(dt)
         self.flip = true
     end
 
-   -- print("Player flip?", self.flip)
-   -- print("mouse angle:", angle)
-   
-
     self.aimAngle = angle
 
     self.weapon:update(dt)
