@@ -1,13 +1,12 @@
 Love = require("love")
 Game = require("core.game")
 local SM = require("core.SM")
+local UI = require("core.UI")
 
 WINDOW_WIDTH  = Love.graphics.getWidth() or 800
 WINDOW_HEIGHT = Love.graphics.getHeight() or 600
 
-local fullscreen = false
-
-DEBUG_FPS = false
+DEBUG_FPS = true
 DESATIVA_INIMIGOS = false
 
 
@@ -22,29 +21,42 @@ function Love.load()
     -- Tela Menu
     SM.register("menu", {
         title = "Menu Inicial",
-        draw = function(self)
-            local w, h = love.graphics.getDimensions()
-            love.graphics.printf(
-                "Clique para iniciar o jogo",
-                0, h/2, w, "center"
-            )
-        end,
-        mousepressed = function(self, x, y, button)
-            if button == 1 then -- Botão esquerdo
+        enter = function(self)
+            UI.clear()
+            UI.addButton("start", (WINDOW_WIDTH * 0.5) - (200/2), (WINDOW_HEIGHT * 0.5) , 200, 50, "Iniciar Jogo", function()
                 SM.set("game")
-            end
-        end
+            end)
+            UI.addButton("exit", (WINDOW_WIDTH * 0.5) - (200/2), (WINDOW_HEIGHT * 0.5) + 55, 200, 50, "Sair", function()
+                Love.event.quit()
+            end)
+        end,
+        update = function(self, dt)
+            UI.clear()
+            UI.addButton("start", (WINDOW_WIDTH * 0.5) - (200/2), (WINDOW_HEIGHT * 0.5), 200, 50, "Iniciar Jogo", function()
+                SM.set("game")
+            end)
+            UI.addButton("exit", (WINDOW_WIDTH * 0.5) - (200/2), (WINDOW_HEIGHT * 0.5) + 55, 200, 50, "Sair", function()
+                Love.event.quit()
+            end)
+            UI.update(dt)
+        end,
+        draw = function(self) UI.draw() end,
+        mousepressed = function(self, x, y, b) UI.mousepressed(x, y, b) end
     })
 
-    -- Tela Jogowwww
+    -- Tela Jogo
     SM.register("game", {
         title = "Tela do Jogo",
+        bgColor = {0.2, 0.1, 0.1, 1},
         enter = function(self, previousScreenName)  
             if previousScreenName == "menu" then
                 Game:load()
             end
         end,
         draw = function(self)
+            if self.bgColor then
+                love.graphics.clear(self.bgColor)
+            end
             Game:draw()
         end,
         mousepressed = function (self, x, y, button)
@@ -69,6 +81,8 @@ function Love.update(dt)
 end
 
 function Love.draw()
+   WINDOW_WIDTH  = Love.graphics.getWidth() or 800
+   WINDOW_HEIGHT = Love.graphics.getHeight() or 600
    SM.draw()
    DrawFPS()
 end
