@@ -26,18 +26,40 @@ function Love.load()
             UI.addButton("start", (WINDOW_WIDTH * 0.5) - (200/2), (WINDOW_HEIGHT * 0.5) , 200, 50, "Iniciar Jogo", function()
                 SM.set("game")
             end)
-            UI.addButton("exit", (WINDOW_WIDTH * 0.5) - (200/2), (WINDOW_HEIGHT * 0.5) + 55, 200, 50, "Sair", function()
+            UI.addButton("config", (WINDOW_WIDTH * 0.5) - (200/2), (WINDOW_HEIGHT * 0.5) + 70 , 200, 50, "Configuração", function()
+                SM.set("config")
+            end)
+            UI.addButton("exit", (WINDOW_WIDTH * 0.5) - (200/2), (WINDOW_HEIGHT * 0.5) + 140, 200, 50, "Sair", function()
                 Love.event.quit()
             end)
         end,
         update = function(self, dt)
             UI.clear()
-            UI.addButton("start", (WINDOW_WIDTH * 0.5) - (200/2), (WINDOW_HEIGHT * 0.5), 200, 50, "Iniciar Jogo", function()
+            UI.addButton("start", (WINDOW_WIDTH * 0.5) - (200/2), (WINDOW_HEIGHT * 0.5) , 200, 50, "Iniciar Jogo", function()
                 SM.set("game")
             end)
-            UI.addButton("exit", (WINDOW_WIDTH * 0.5) - (200/2), (WINDOW_HEIGHT * 0.5) + 55, 200, 50, "Sair", function()
+            UI.addButton("config", (WINDOW_WIDTH * 0.5) - (200/2), (WINDOW_HEIGHT * 0.5) + 70 , 200, 50, "Configuração", function()
+                SM.set("config")
+            end)
+            UI.addButton("exit", (WINDOW_WIDTH * 0.5) - (200/2), (WINDOW_HEIGHT * 0.5) + 140, 200, 50, "Sair", function()
                 Love.event.quit()
             end)
+            UI.update(dt)
+        end,
+        draw = function(self) UI.draw() end,
+        mousepressed = function(self, x, y, b) UI.mousepressed(x, y, b) end
+    })
+
+    -- Tela Configuração
+    SM.register("config", {
+        title = "Configurações",
+        enter = function(self,previousScreenName)
+            UI.clear()
+            UI.addButton("voltar", (WINDOW_WIDTH * 0.5) - (200/2), (WINDOW_HEIGHT * 0.5) + 140, 200, 50, "Voltar", function()
+                SM.set(previousScreenName)
+            end)
+        end,
+        update = function(self, dt)
             UI.update(dt)
         end,
         draw = function(self) UI.draw() end,
@@ -67,7 +89,7 @@ function Love.load()
         end,
         keypressed = function(self, key)
             if key == "escape" then
-                SM.set("menu")
+                SM.set("config")
             end
         end
     })

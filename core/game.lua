@@ -10,7 +10,6 @@ Game.__index = Game
 
 -- Constantes dos tipos de tile
 local MAPA_VILA = 1
-local DESATIVA_INIMIGOS = true
 
 function Game:load()
     self.player = Player:new(love.graphics.getWidth() / 2, love.graphics.getHeight() / 2)
