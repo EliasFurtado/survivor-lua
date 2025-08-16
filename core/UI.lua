@@ -3,7 +3,7 @@ local UI = {}
 UI.elements = {}
 
 UI.default = {
-    font = love.graphics.newFont(14),
+    font = love.graphics.newFont(25),
     buttonColor = {0.2, 0.2, 0.2, 1},
     buttonHoverColor = {0.3, 0.3, 0.3, 1},
     textColor = {1, 1, 1, 1},
@@ -34,17 +34,43 @@ function UI.addLabel(id, x, y, text)
     })
 end
 
+function UI.addCheckbox(x, y, size, label, default, onChange)
+    table.insert(UI.elements, {
+        type = "checkbox",
+        x = x, y = y,
+        size = size or 20,
+        label = label or "",
+        checked = default or false,
+        onChange = onChange or function() end
+    })
+end
+
+function UI.addPanel(id, x, y, w, h, opts)
+    table.insert(UI.elements, {
+        type = "panel",
+        id = id,
+        x = x, y = y,
+        w = w, h = h,
+        color = opts and opts.color or {0, 0, 0, 0.5}, -- cor com opacidade
+        image = opts and opts.image or nil,            -- imagem opcional
+        mode  = opts and opts.mode or "fit"            -- "fit", "stretch" ou "tile"
+    })
+end
+
 function UI.update(dt)
     -- Atualização de estado (hover)
     local mx, my = love.mouse.getPosition()
     for _, e in ipairs(UI.elements) do
         if e.type == "button" then
             e.isHover = mx >= e.x and mx <= e.x + e.w and my >= e.y and my <= e.y + e.h
+        elseif e.type == "checkbox" then
+            e.isHover = mx >= e.x and mx <= e.x + e.size and my >= e.y and my <= e.y + e.size
         end
     end
 end
 
 function UI.draw()
+    local fontanterior = love.graphics.getFont()
     love.graphics.setFont(UI.default.font)
     for _, e in ipairs(UI.elements) do
         if e.type == "button" then
@@ -65,8 +91,51 @@ function UI.draw()
         elseif e.type == "label" then
             love.graphics.setColor(UI.default.textColor)
             love.graphics.print(e.text, e.x, e.y)
+        elseif e.type == "checkbox" then
+             -- borda da caixinha
+            love.graphics.setColor(1, 1, 1)
+            love.graphics.rectangle("line", e.x, e.y, e.size, e.size)
+
+            -- se marcado, desenha preenchido
+            if e.checked then
+                love.graphics.setColor(0, 1, 0) -- verde
+                love.graphics.rectangle("fill", e.x + 3, e.y + 3, e.size - 6, e.size - 6)
+            end
+
+            -- label
+            love.graphics.setColor(1, 1, 1)
+            love.graphics.print(e.label, e.x + e.size + 8, e.y - 5)
+        elseif e.type == "panel" then
+            if e.image then
+                local imgW, imgH = e.image:getDimensions()
+                
+                if e.mode == "stretch" then
+                    love.graphics.setColor(1, 1, 1, 1)
+                    love.graphics.draw(e.image, e.x, e.y, 0, e.w / imgW, e.h / imgH)
+
+                elseif e.mode == "fit" then
+                    local scale = math.min(e.w / imgW, e.h / imgH)
+                    local offsetX = (e.w - imgW * scale) / 2
+                    local offsetY = (e.h - imgH * scale) / 2
+                    love.graphics.setColor(1, 1, 1, 1)
+                    love.graphics.draw(e.image, e.x + offsetX, e.y + offsetY, 0, scale, scale)
+
+                elseif e.mode == "tile" then
+                    love.graphics.setColor(1, 1, 1, 1)
+                    for ix = e.x, e.x + e.w, imgW do
+                        for iy = e.y, e.y + e.h, imgH do
+                            love.graphics.draw(e.image, ix, iy)
+                        end
+                    end
+                end
+            else
+                -- painel apenas colorido
+                love.graphics.setColor(e.color)
+                love.graphics.rectangle("fill", e.x, e.y, e.w, e.h, 6, 6)
+            end
         end
     end
+    love.graphics.setFont(fontanterior) -- reseta fonte
 end
 
 function UI.mousepressed(x, y, button)
@@ -74,6 +143,9 @@ function UI.mousepressed(x, y, button)
         for _, e in ipairs(UI.elements) do
             if e.type == "button" and e.isHover and e.onClick then
                 e.onClick(e.id)
+            elseif e.type == "checkbox" and e.isHover then
+                e.checked = not e.checked
+                e.onChange(e.checked)
             end
         end
     end

@@ -259,15 +259,16 @@ function SM.update(dt)
 end
 
 local function drawTitleBar(title)
-  if not SM._cfg.showTitle then return end
+  local top = SM.peek()
+  if not SM._cfg.showTitle or (not top.showTitle and top.showTitle ~= nil) then return end
   local w, h = love.graphics.getDimensions()
   local th = SM._cfg.titleHeight
   -- barra
-  love.graphics.setColor(SM._cfg.titleBarColor)
-  love.graphics.rectangle("fill", 0, 0, w, th)
+  --love.graphics.setColor(SM._cfg.titleBarColor)
+  --love.graphics.rectangle("fill", 0, 0, w, th)
   -- texto
   love.graphics.setColor(SM._cfg.titleTextColor)
-  local font = SM._cfg.titleFont or love.graphics.getFont()
+  local font = SM._cfg.titleFont or love.graphics.newFont(32)
   love.graphics.push("all")
   love.graphics.setFont(font)
   local pad = SM._cfg.titlePadding
@@ -277,13 +278,14 @@ local function drawTitleBar(title)
   local tx = pad
   if SM._cfg.titleAlign == "center" then
     tx = (w - tw)/2
+    ty = ty + 60 -- ajuste para centralizar verticalmente
   elseif SM._cfg.titleAlign == "right" then
     tx = w - tw - pad
   end
   if SM._cfg.useTitleShadow then
-    love.graphics.setColor(0,0,0,0.6)
-    love.graphics.print(text, tx+1, ty+1)
-    love.graphics.setColor(SM._cfg.titleTextColor)
+    Love.graphics.setColor(0,0,0,0.6)
+    Love.graphics.print(text, tx+1, ty+1)
+    Love.graphics.setColor(SM._cfg.titleTextColor)
   end
   love.graphics.print(text, tx, ty)
   love.graphics.pop()
@@ -295,9 +297,12 @@ local function applyBackground()
 end
 
 function SM.draw()
-  applyBackground()
-  local tr = SM._transition
+  
   local top = SM.peek()
+  if not top.nobackground then
+    applyBackground()
+  end
+  local tr = SM._transition
 
   if tr.active and tr.type == "fade" then
     local a = math.min(1, tr.t / math.max(0.0001, tr.duration))
