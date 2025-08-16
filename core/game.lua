@@ -35,6 +35,7 @@ end
 function Game:update(dt)
     self.player:update(dt)
     self.cam:update(dt)
+    self.hudExperience.update(WINDOW_WIDTH * 0.01, WINDOW_HEIGHT * 0.01, self.player.experience)
     
     if not DESATIVA_INIMIGOS then
         for i = #self.enemies, 1, -1 do
@@ -101,10 +102,9 @@ function Game:update(dt)
 end
 
 function Game:draw()
-    self. cam:apply()
+    self.cam:apply()
     self.mapa:draw(10) -- tamanho do tile = 10 pixels
     self.player:draw()
-    self.hudExperience.draw(10, 10, self.player.experience)
 
     for li = #self.lootTable, 1, -1 do
         local loot = self.lootTable[li]
@@ -119,7 +119,9 @@ function Game:draw()
         local bullet = self.bullets[bi]
         bullet:draw()
     end
-    self. cam:clear()
+    self.cam:clear()
+
+    self.hudExperience.draw(WINDOW_WIDTH * 0.01, WINDOW_HEIGHT * 0.01, self.player.experience)
 end
 
 
