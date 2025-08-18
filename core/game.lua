@@ -12,18 +12,18 @@ Game.__index = Game
 local MAPA_VILA = 1
 
 function Game:load()
-    self.player = Player:new(love.graphics.getWidth() / 2, love.graphics.getHeight() / 2)
-    self.cam = Camera:new(self.player, love.graphics.getWidth(), love.graphics.getHeight())
-
-     math.randomseed(os.time())
-
+    
+    math.randomseed(os.time())
+    
     self.mapa = MapaAC:new(100, 100, 0.45, 32) -- largura, altura, probabilidade inicial
+    local centro = self.mapa:getCenter()
     self.mapa:carregarTileset("assets/tiles.png", 32)
     -- aplica 4-5 iterações para suavizar cavernas
     for i = 1, 5 do
-       self. mapa:step()
+        self. mapa:step()
     end
-
+    self.player = Player:new(centro.tile.x, centro.tile.y)
+    self.cam = Camera:new(self.player, love.graphics.getWidth(), love.graphics.getHeight())
     self.hudExperience = HudExperience
     self.enemies = {}
     self:spawnEnemies(20)
@@ -33,8 +33,10 @@ function Game:load()
 end
 
 function Game:update(dt)
-    self.player:update(dt)
-    self.cam:update(dt)
+    local W_map = self.mapa.width * self.mapa.tileSize
+    local H_map = self.mapa.height * self.mapa.tileSize
+    self.player:update(dt, W_map, H_map)
+    self.cam:update(dt, W_map, H_map)
     self.hudExperience.update(WINDOW_WIDTH * 0.01, WINDOW_HEIGHT * 0.01, self.player.experience)
     
     if not DESATIVA_INIMIGOS then

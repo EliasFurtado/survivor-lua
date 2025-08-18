@@ -104,4 +104,18 @@ function MapaAC:draw()
     end
 end
 
+function MapaAC:getCenter()
+    local centroX = math.floor(self.width / 2)
+    local centroY = math.floor(self.height / 2)
+
+    return {
+        x = centroX,
+        y = centroY,
+        tile = {
+            x = (centroX - 1) * self.tileSize + self.tileSize / 2,
+            y = (centroY - 1) * self.tileSize + self.tileSize / 2
+        }
+    }
+end
+
 return MapaAC

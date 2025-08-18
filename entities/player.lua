@@ -46,7 +46,7 @@ function Player:new(x, y)
     return self
 end
 
-function Player:update(dt)
+function Player:update(dt, W_map, H_map)
     local moveX, moveY = 0, 0
     if love.keyboard.isDown("w") or Love.keyboard.isDown("up") then moveY = -1 self.animation:update(dt) end
     if love.keyboard.isDown("s") or Love.keyboard.isDown("down") then moveY = 1 self.animation:update(dt) end
@@ -77,6 +77,12 @@ function Player:update(dt)
 
     self.weapon:update(dt)
     self.dash:update(dt, self)
+
+    W_map = W_map or 0
+    H_map = H_map or 0
+    self.x = math.max(0, math.min(self.x, W_map - self.width))
+    self.y = math.max(0, math.min(self.y, H_map - self.height))
+
 end
 
 function Player:draw()
