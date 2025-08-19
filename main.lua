@@ -88,7 +88,7 @@ function Love.load()
         end,
         update = function(self, dt)
             UI.clear()
-            UI.addCheckbox((WINDOW_WIDTH * 0.5) - (200/2), (WINDOW_HEIGHT * 0.5) - 100, 20, "fullscreen", love.window.getFullscreen(), function(checked)
+            UI.addCheckbox((WINDOW_WIDTH * 0.5) - (200/2), (WINDOW_HEIGHT * 0.5) - 100, 20, "fullscreen", Love.window.getFullscreen(), function(checked)
                 SM.toggleFullscreen()
             end)
             UI.addCheckbox((WINDOW_WIDTH * 0.5) - (200/2), (WINDOW_HEIGHT * 0.5) - 50, 20, "Ativar Fps", DEBUG_FPS, function(checked)

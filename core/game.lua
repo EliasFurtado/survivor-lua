@@ -23,7 +23,7 @@ function Game:load()
         self. mapa:step()
     end
     self.player = Player:new(centro.tile.x, centro.tile.y)
-    self.cam = Camera:new(self.player, love.graphics.getWidth(), love.graphics.getHeight())
+    self.cam = Camera:new(self.player, Love.graphics.getWidth(), Love.graphics.getHeight())
     self.hudExperience = HudExperience
     self.enemies = {}
     self:spawnEnemies(20)

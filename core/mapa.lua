@@ -19,13 +19,13 @@ end
 
 function Mapa:carregarTileset(tilesetImage, tileSize)
     self.tileSize = tileSize or self.tileSize
-    local image = love.graphics.newImage(tilesetImage)
+    local image = Love.graphics.newImage(tilesetImage)
     local tilesetW, tilesetH = image:getWidth(), image:getHeight()
     local tilesX, tilesY = tilesetW / self.tileSize, tilesetH / self.tileSize
 
     for y = 0, tilesY - 1 do
         for x = 0, tilesX - 1 do
-            local quad = love.graphics.newQuad(
+            local quad = Love.graphics.newQuad(
                 x * self.tileSize, y * self.tileSize,
                 self.tileSize, self.tileSize,
                 tilesetW, tilesetH
@@ -39,7 +39,7 @@ function Mapa:gerar()
     for y = 1, self.height do
         self.tiles[y] = {}
         for x = 1, self.width do
-            self.tiles[y][x] = love.math.random(TERRA, GRAMA)
+            self.tiles[y][x] = Love.math.random(TERRA, GRAMA)
         end
     end
 end
@@ -53,7 +53,7 @@ function Mapa:draw()
         for x = 1, self.width do
             local tileIndex = self.tiles[y][x]
             if self.tileImages[tileIndex] then
-                love.graphics.draw(
+                Love.graphics.draw(
                     self.tileImages[tileIndex].image,
                     self.tileImages[tileIndex].quad,
                     (x - 1) * self.tileSize,

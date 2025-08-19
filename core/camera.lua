@@ -17,7 +17,7 @@ end
 
 function Camera:update(dt, W_map, H_map)
     -- posição desejada da câmera (centralizando o alvo)
-    self.screenWidth,self.screenHeight = love.graphics.getDimensions()
+    self.screenWidth,self.screenHeight = Love.graphics.getDimensions()
 
     local targetX = self.target.x - self.screenWidth / 2
     local targetY = self.target.y - self.screenHeight / 2
@@ -33,12 +33,12 @@ function Camera:update(dt, W_map, H_map)
 end
 
 function Camera:apply()
-    love.graphics.push()
-    love.graphics.translate(-self.x, -self.y)
+    Love.graphics.push()
+    Love.graphics.translate(-self.x, -self.y)
 end
 
 function Camera:clear()
-    love.graphics.pop()
+    Love.graphics.pop()
 end
 
 return Camera

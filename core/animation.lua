@@ -7,7 +7,7 @@ Animation.__index = Animation
 -- totalFrames: número de frames (opcional, se nil calcula automático pela largura da imagem e frameWidth)
 -- frameTime: tempo por frame (default 0.1)
 function Animation:new(imagePath, frameWidth, frameHeight, totalFrames, frameTime)
-    local image = love.graphics.newImage(imagePath)
+    local image = Love.graphics.newImage(imagePath)
     local iw, ih = image:getDimensions()
 
     -- Se frameHeight não definido, usa altura da imagem inteira
@@ -15,7 +15,7 @@ function Animation:new(imagePath, frameWidth, frameHeight, totalFrames, frameTim
 
     local frames = {}
     for i = 1, totalFrames  do
-        table.insert(frames, love.graphics.newQuad((i - 1) * frameWidth, 0,frameWidth, frameHeight,iw , ih))
+        table.insert(frames, Love.graphics.newQuad((i - 1) * frameWidth, 0,frameWidth, frameHeight,iw , ih))
     end
 
     local this = {
@@ -53,7 +53,7 @@ function Animation:draw(player, drawDebug, flip)
 
     local sx = flip and -1 or 1
 
-    love.graphics.draw(
+    Love.graphics.draw(
         self.image,
         self.frames[self.currentFrame],
         player.x + ox,       -- posição X + origem X
@@ -65,10 +65,10 @@ function Animation:draw(player, drawDebug, flip)
         oy                   -- offset Y (origem central)
     )
     if drawDebug then
-        love.graphics.setColor(0, 1, 1, 0.5)
-        love.graphics.rectangle("line", player.x, player.y, player.width, player.height)
-        love.graphics.circle("line",player.x + player.width/2, player.y + player.height/2, 5)
-        love.graphics.setColor(1, 1, 1, 1)
+        Love.graphics.setColor(0, 1, 1, 0.5)
+        Love.graphics.rectangle("line", player.x, player.y, player.width, player.height)
+        Love.graphics.circle("line",player.x + player.width/2, player.y + player.height/2, 5)
+        Love.graphics.setColor(1, 1, 1, 1)
     end
 end
 

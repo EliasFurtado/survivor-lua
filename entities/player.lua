@@ -48,10 +48,10 @@ end
 
 function Player:update(dt, W_map, H_map)
     local moveX, moveY = 0, 0
-    if love.keyboard.isDown("w") or Love.keyboard.isDown("up") then moveY = -1 self.animation:update(dt) end
-    if love.keyboard.isDown("s") or Love.keyboard.isDown("down") then moveY = 1 self.animation:update(dt) end
-    if love.keyboard.isDown("a") or Love.keyboard.isDown("left") then moveX = -1 self.animation:update(dt) end
-    if love.keyboard.isDown("d") or Love.keyboard.isDown("right") then moveX = 1 self.animation:update(dt) end
+    if Love.keyboard.isDown("w") or Love.keyboard.isDown("up") then moveY = -1 self.animation:update(dt) end
+    if Love.keyboard.isDown("s") or Love.keyboard.isDown("down") then moveY = 1 self.animation:update(dt) end
+    if Love.keyboard.isDown("a") or Love.keyboard.isDown("left") then moveX = -1 self.animation:update(dt) end
+    if Love.keyboard.isDown("d") or Love.keyboard.isDown("right") then moveX = 1 self.animation:update(dt) end
 
     local len = math.sqrt(moveX^2 + moveY^2)
     if len > 0 then
@@ -59,7 +59,7 @@ function Player:update(dt, W_map, H_map)
         self.y = self.y + (moveY / len) * self.speed * dt
     end
 
-    local mx, my = love.mouse.getPosition()
+    local mx, my = Love.mouse.getPosition()
     local dx = mx - self.x
     local dy = my - self.y
     local angle = math.atan2(dy, dx)

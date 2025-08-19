@@ -13,7 +13,7 @@ Uso básico (no seu main.lua):
 
 local SM = require("ScreenManager")
 
-function love.load()
+function Love.load()
   SM.configure({
     showTitle = true,
     titleAlign = "center", -- "left","center","right"
@@ -29,10 +29,10 @@ function love.load()
     end,
     update = function(self, dt) end,
     draw = function(self)
-      local w, h = love.graphics.getDimensions()
-      local font = love.graphics.getFont()
+      local w, h = Love.graphics.getDimensions()
+      local font = Love.graphics.getFont()
       local tw = font:getWidth(self.msg)
-      love.graphics.print(self.msg, (w - tw)/2, h*0.5)
+      Love.graphics.print(self.msg, (w - tw)/2, h*0.5)
     end,
     keypressed = function(self, key)
       if key == "return" then
@@ -50,9 +50,9 @@ function love.load()
     end,
     update = function(self, dt) self.t = self.t + dt end,
     draw = function(self)
-      local w, h = love.graphics.getDimensions()
-      love.graphics.print("Jogando... t="..string.format("%.2f", self.t), 16, 56)
-      love.graphics.print("ESC: voltar", 16, 80)
+      local w, h = Love.graphics.getDimensions()
+      Love.graphics.print("Jogando... t="..string.format("%.2f", self.t), 16, 56)
+      Love.graphics.print("ESC: voltar", 16, 80)
     end,
     keypressed = function(self, key)
       if key == "escape" then
@@ -65,13 +65,13 @@ function love.load()
   SM.set("menu")
 end
 
-function love.update(dt) SM.update(dt) end
-function love.draw() SM.draw() end
-function love.keypressed(k, sc, rep) SM.keypressed(k, sc, rep) end
-function love.mousepressed(x, y, b, istouch, presses) SM.mousepressed(x, y, b, istouch, presses) end
-function love.wheelmoved(x, y) SM.wheelmoved(x, y) end
-function love.textinput(t) SM.textinput(t) end
-function love.resize(w, h) SM.resize(w, h) end
+function Love.update(dt) SM.update(dt) end
+function Love.draw() SM.draw() end
+function Love.keypressed(k, sc, rep) SM.keypressed(k, sc, rep) end
+function Love.mousepressed(x, y, b, istouch, presses) SM.mousepressed(x, y, b, istouch, presses) end
+function Love.wheelmoved(x, y) SM.wheelmoved(x, y) end
+function Love.textinput(t) SM.textinput(t) end
+function Love.resize(w, h) SM.resize(w, h) end
 
 --]]
 
@@ -91,7 +91,7 @@ local SM = {
     titleAlign = "center",
     titleHeight = 32,
     titlePadding = 10,
-    titleFont = nil, -- use love.graphics.setNewFont() para trocar globalmente
+    titleFont = nil, -- use Love.graphics.setNewFont() para trocar globalmente
     backgroundColor = {0.1, 0.1, 0.12, 1},
     titleTextColor = {1,1,1,1},
     titleBarColor = {0,0,0,0.25},
@@ -261,16 +261,16 @@ end
 local function drawTitleBar(title)
   local top = SM.peek()
   if not SM._cfg.showTitle or (not top.showTitle and top.showTitle ~= nil) then return end
-  local w, h = love.graphics.getDimensions()
+  local w, h = Love.graphics.getDimensions()
   local th = SM._cfg.titleHeight
   -- barra
-  --love.graphics.setColor(SM._cfg.titleBarColor)
-  --love.graphics.rectangle("fill", 0, 0, w, th)
+  --Love.graphics.setColor(SM._cfg.titleBarColor)
+  --Love.graphics.rectangle("fill", 0, 0, w, th)
   -- texto
-  love.graphics.setColor(SM._cfg.titleTextColor)
-  local font = SM._cfg.titleFont or love.graphics.newFont(32)
-  love.graphics.push("all")
-  love.graphics.setFont(font)
+  Love.graphics.setColor(SM._cfg.titleTextColor)
+  local font = SM._cfg.titleFont or Love.graphics.newFont(32)
+  Love.graphics.push("all")
+  Love.graphics.setFont(font)
   local pad = SM._cfg.titlePadding
   local text = title or ""
   local tw = font:getWidth(text)
@@ -287,13 +287,13 @@ local function drawTitleBar(title)
     Love.graphics.print(text, tx+1, ty+1)
     Love.graphics.setColor(SM._cfg.titleTextColor)
   end
-  love.graphics.print(text, tx, ty)
-  love.graphics.pop()
+  Love.graphics.print(text, tx, ty)
+  Love.graphics.pop()
 end
 
 local function applyBackground()
   local c = SM._cfg.backgroundColor
-  love.graphics.clear(c[1], c[2], c[3], c[4] or 1)
+  Love.graphics.clear(c[1], c[2], c[3], c[4] or 1)
 end
 
 function SM.draw()
@@ -308,16 +308,16 @@ function SM.draw()
     local a = math.min(1, tr.t / math.max(0.0001, tr.duration))
     -- desenha from com alpha 1-a, to com alpha a
     if tr.from and tr.from.draw then
-      love.graphics.push("all")
-      love.graphics.setColor(1,1,1,1)
+      Love.graphics.push("all")
+      Love.graphics.setColor(1,1,1,1)
       tr.from:draw()
-      love.graphics.pop()
+      Love.graphics.pop()
     end
     if tr.to and tr.to.draw then
-      love.graphics.push("all")
-      love.graphics.setColor(1,1,1,a)
+      Love.graphics.push("all")
+      Love.graphics.setColor(1,1,1,a)
       tr.to:draw()
-      love.graphics.pop()
+      Love.graphics.pop()
     end
     drawTitleBar((tr.to and tr.to.title) or (top and top.title) or "")
     return
@@ -329,12 +329,12 @@ end
 
 -- Entrada: F11 / Alt+Enter para fullscreen
 function SM.toggleFullscreen()
-  local fs = love.window.getFullscreen()
-  love.window.setFullscreen(not fs)
+  local fs = Love.window.getFullscreen()
+  Love.window.setFullscreen(not fs)
 end
 
 function SM.keypressed(key, scancode, isrepeat)
-  if key == "f11" or (key == "return" and (love.keyboard.isDown("lalt") or love.keyboard.isDown("ralt"))) then
+  if key == "f11" or (key == "return" and (Love.keyboard.isDown("lalt") or Love.keyboard.isDown("ralt"))) then
     SM.toggleFullscreen()
     return
   end
