@@ -83,8 +83,14 @@ function Love.load()
     -- Tela Configuração
     SM.register("config", {
         title = "Configurações",
-        enter = function(self,previousScreenName)
+        enter = function(self, previousScreenName)  
+            self.previousScreenName = previousScreenName or "menu"
+        end,
+        update = function(self, dt)
             UI.clear()
+            UI.addCheckbox((WINDOW_WIDTH * 0.5) - (200/2), (WINDOW_HEIGHT * 0.5) - 100, 20, "fullscreen", love.window.getFullscreen(), function(checked)
+                SM.toggleFullscreen()
+            end)
             UI.addCheckbox((WINDOW_WIDTH * 0.5) - (200/2), (WINDOW_HEIGHT * 0.5) - 50, 20, "Ativar Fps", DEBUG_FPS, function(checked)
                 DEBUG_FPS = checked
             end)
@@ -92,10 +98,11 @@ function Love.load()
                 DESATIVA_INIMIGOS = checked
             end)
             UI.addButton("voltar", (WINDOW_WIDTH * 0.5) - (200/2), (WINDOW_HEIGHT * 0.5) + 140, 200, 50, "Voltar", function()
-                SM.set(previousScreenName)
+                SM.set(self.previousScreenName or "menu")
             end)
+
+            UI.update(dt)
         end,
-        update = function(self, dt) UI.update(dt) end,
         draw = function(self) UI.draw() end,
         mousepressed = function(self, x, y, b) UI.mousepressed(x, y, b) end
     })

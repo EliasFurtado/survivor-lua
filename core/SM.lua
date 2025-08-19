@@ -328,14 +328,14 @@ function SM.draw()
 end
 
 -- Entrada: F11 / Alt+Enter para fullscreen
-local function toggleFullscreen()
+function SM.toggleFullscreen()
   local fs = love.window.getFullscreen()
   love.window.setFullscreen(not fs)
 end
 
 function SM.keypressed(key, scancode, isrepeat)
   if key == "f11" or (key == "return" and (love.keyboard.isDown("lalt") or love.keyboard.isDown("ralt"))) then
-    toggleFullscreen()
+    SM.toggleFullscreen()
     return
   end
   local top = SM.peek()
